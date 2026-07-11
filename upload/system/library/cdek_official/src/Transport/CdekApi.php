@@ -10,7 +10,7 @@ use CDEK\Exceptions\DecodeException;
 
 class CdekApi
 {
-    private const TOKEN_PATH   = 'oauth/token?parameters';
+    private const TOKEN_PATH   = 'oauth/token';
     private const REGION_PATH  = 'location/cities';
     private const ORDERS_PATH  = 'orders/';
     private const PVZ_PATH     = 'deliverypoints';
