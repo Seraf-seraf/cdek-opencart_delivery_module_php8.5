@@ -71,7 +71,6 @@ class HttpClient
 
         $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
 
         if(self::isServerError($httpCode)){
             throw new HttpServerException(
