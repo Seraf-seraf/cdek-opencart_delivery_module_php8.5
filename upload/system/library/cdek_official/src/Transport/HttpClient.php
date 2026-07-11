@@ -102,19 +102,21 @@ class HttpClient
         $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-        if(self::isServerError($httpCode)){
+        $headers = substr($response, 0, $headerSize);
+        $result = substr($response, $headerSize);
+
+        if (self::isHttpError($httpCode)) {
             throw new HttpServerException(
                 [
-                    'message' => 'Server request error',
+                    'message' => 'HTTP request failed',
                     'code' => $httpCode,
                     'url' => $url,
                     'method' => $method,
+                    'response' => substr($result, 0, 1000),
                 ]
             );
         }
 
-        $headers = substr($response, 0, $headerSize);
-        $result = substr($response, $headerSize);
         $addedHeaders = array_filter(explode("\r\n", $headers), static fn ($line) =>
             !empty($line) && stripos($line, 'X-') !== false
         );
@@ -130,13 +132,15 @@ class HttpClient
             return $raw ? $result : json_decode($result, true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
             throw new DecodeException(
-                'Error decoding JSON response',
+                "Error decoding JSON response (HTTP $httpCode)",
+                0,
+                $e,
             );
         }
     }
 
-    private static function isServerError(int $httpCode): bool
+    private static function isHttpError(int $httpCode): bool
     {
-        return $httpCode >= 500 && $httpCode < 600;
+        return $httpCode >= 400;
     }
 }
