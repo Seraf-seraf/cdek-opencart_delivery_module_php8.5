@@ -94,6 +94,8 @@ class RenderSettingsPageAction
             'tariffs' => Tariffs::getTariffList(),
             'currencies' => Currency::listCurrencies(),
             'auth_status' => $authStatus,
+            'shipping_cdek_official_sort_order' =>
+                (int)$registry->get('config')->get('shipping_cdek_official_sort_order'),
             'weight_classes' => $registry->get('model_localisation_weight_class')->getWeightClasses(),
             'length_classes' => $registry->get('model_localisation_length_class')->getLengthClasses(),
         ];

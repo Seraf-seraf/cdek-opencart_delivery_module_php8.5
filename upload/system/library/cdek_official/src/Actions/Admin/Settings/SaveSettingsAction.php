@@ -50,6 +50,10 @@ class SaveSettingsAction
             }
 
             $settings->save();
+            $shippingSettings = $registry->get('model_setting_setting')->getSetting('shipping_cdek_official');
+            $shippingSettings['shipping_cdek_official_sort_order'] =
+                (int)($_POST['shipping_cdek_official_sort_order'] ?? 0);
+            $registry->get('model_setting_setting')->editSetting('shipping_cdek_official', $shippingSettings);
             $settings->validate();
             $session->data['success'] = $language->get('text_success');
         } catch (DecodeException | HttpServerException $exception) {
